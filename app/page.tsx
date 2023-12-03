@@ -1,95 +1,65 @@
-import Image from 'next/image'
-import styles from './page.module.css'
+"use client"
+import { useState } from 'react';
+import { List } from './List';
 
-export default function Home() {
+import { Heading, Input, Button, VStack, HStack } from '@chakra-ui/react';
+
+export type Todo = {
+  id: number;
+  text: string;
+};
+
+export default function Page(){
+  const [inputText, setInputText] = useState("");
+  const [todos, setTodos] = useState<Todo[]>([
+    { id: 1, text: "Todo1" },
+    { id: 2, text: "Todo2" },
+  ]);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInputText(e.target.value);
+  };
+
+  const handleClick = () => {
+    setTodos([...todos, { id: todos.length + 1, text: inputText }]);
+    setInputText("");
+  };
+
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>app/page.tsx</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
+    <>
+      <VStack p="10" spacing="10">
+        <Heading color="blue.200" fontSize="5xl">
+          Todoリスト
+        </Heading>
 
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
+        <HStack>
+        <Input
+          type="text"
+          value={inputText}
+          onChange={handleChange}
+          placeholder="Todoを入力"
+          _placeholder={{ opacity: "0.3", color: "gray.500" }}
+          size="lg"
+          p={3}
+          bgColor="white"
+          variant="flushed"
         />
-      </div>
 
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
+        <Button
+          colorScheme="blue"
+          size="md"
+          bgColor="white"
+          variant="outline"
+          px={7}
+          type="button"
+          onClick={handleClick}
         >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
+          追加
+        </Button>
+        </HStack>
 
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore starter templates for Next.js.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
-  )
+        <List todos={todos} />
+      </VStack>
+    </>
+  );
 }
